@@ -372,45 +372,76 @@ footer a:hover{color:var(--green-mid)}
   </div>
 </div><div class="cf-form">
   <h3>Request a free quote</h3>
-  <div class="cf-row">
-    <div class="cf-field"><label for="cf-name">Your name</label><input type="text" id="cf-name" placeholder="John Smith"></div>
-    <div class="cf-field"><label for="cf-company">Company / venue</label><input type="text" id="cf-company" placeholder="The Crown Hotel"></div>
+  <div id="cf-success" style="display:none;background:var(--green-light);border:1px solid #C9E49A;border-radius:var(--r);padding:1.25rem 1.5rem;text-align:center;margin-bottom:1rem">
+    <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--green-dark);margin-bottom:0.4rem">Message sent</div>
+    <div style="font-size:0.85rem;color:var(--charcoal);font-weight:500">Thanks — we'll be in touch shortly. If it's urgent call <a href="tel:07511411835" style="color:var(--green-dark)">07511 411835</a>.</div>
   </div>
-  <div class="cf-field"><label for="cf-phone">Phone number</label><input type="tel" id="cf-phone" placeholder="07700 900000"></div>
-  <div class="cf-field"><label for="cf-service">Service needed</label>
-    <select id="cf-service">
-      <option value="">Select a service…</option>
-      <option>Kitchen extract clean (TR19)</option>
-      <option>Fire damper servicing</option>
-      <option>Passive fire protection</option>
-      <option>Planned maintenance programme</option>
-      <option>Ductwork cleaning</option>
-      <option>General maintenance / building works</option>
-      <option>Not sure — I need a survey</option>
-    </select>
+  <div id="cf-fields">
+    <div class="cf-row">
+      <div class="cf-field"><label for="cf-name">Your name</label><input type="text" id="cf-name" name="name" placeholder="John Smith"></div>
+      <div class="cf-field"><label for="cf-company">Company / venue</label><input type="text" id="cf-company" name="company" placeholder="The Crown Hotel"></div>
+    </div>
+    <div class="cf-field"><label for="cf-phone">Phone number</label><input type="tel" id="cf-phone" name="phone" placeholder="07700 900000"></div>
+    <div class="cf-field"><label for="cf-service">Service needed</label>
+      <select id="cf-service" name="service">
+        <option value="">Select a service…</option>
+        <option>Kitchen extract clean (TR19)</option>
+        <option>Fire damper servicing</option>
+        <option>Passive fire protection</option>
+        <option>Planned maintenance programme</option>
+        <option>Ductwork cleaning</option>
+        <option>General maintenance / building works</option>
+        <option>Not sure — I need a survey</option>
+      </select>
+    </div>
+    <div class="cf-field"><label for="cf-location">Site location / postcode</label><input type="text" id="cf-location" name="location" placeholder="London EC1A"></div>
+    <div class="cf-field"><label for="cf-message">Tell us more</label><textarea id="cf-message" name="message" placeholder="Size of extraction system, number of canopies, any compliance deadlines…"></textarea></div>
+    <button onclick="submitCF()" class="btn btn-primary cf-submit" type="button">Send enquiry &rarr;</button>
+    <p class="form-note">Or call us on <a href="tel:07511411835">07511 411835</a></p>
   </div>
-  <div class="cf-field"><label for="cf-location">Site location / postcode</label><input type="text" id="cf-location" placeholder="London EC1A"></div>
-  <div class="cf-field"><label for="cf-message">Tell us more</label><textarea id="cf-message" placeholder="Size of extraction system, number of canopies, any compliance deadlines…"></textarea></div>
-  <a href="https://docs.google.com/forms/d/e/1FAIpQLScVp80iHROeLDYi4JaXN2n-RdzU-V2BpxZam3YM7QMnWDWLJA/viewform" target="_blank" class="btn btn-primary cf-submit">Send enquiry &rarr;</a>
-  <p class="form-note">Or call us on <a href="tel:07511411835">07511 411835</a></p>
-</div></div>
-  </div>
-</section>
-<footer>
-  <div class="footer-nav">
-    <a href="index.html">Home</a>
-    <a href="services.html">Services</a>
-    <a href="gallery.html">Our Work</a>
-    <a href="about.html">About</a>
-    <a href="contact.html">Contact</a>
-  </div>
-  <span class="footer-tagline">Protect your business. Stay compliant. Stay open.</span>
-  <p>&copy; 2025 ClearFlo Extracts. Herne Bay, Kent. Serving London, Kent &amp; the South East.</p>
-  <p style="margin-top:0.5rem"><a href="tel:07511411835">07511 411835</a> &nbsp;·&nbsp; <a href="mailto:info@clearfloextracts.com">info@clearfloextracts.com</a></p>
-</footer>
+</div>
 <script>
-function showTab(id,btn){document.querySelectorAll('.services-panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.getElementById('tab-'+id).classList.add('active');btn.classList.add('active');}
-(function(){var p=location.pathname.split('/').pop()||'index.html';document.querySelectorAll('.nav-links a').forEach(function(a){if(a.getAttribute('href')===p)a.classList.add('active');});})();
+async function submitCF() {
+  var name = document.getElementById('cf-name').value;
+  var phone = document.getElementById('cf-phone').value;
+  var service = document.getElementById('cf-service').value;
+  if (!name || !phone || !service) {
+    alert('Please fill in your name, phone number and service needed.');
+    return;
+  }
+  var btn = document.querySelector('.cf-submit');
+  btn.textContent = 'Sending…';
+  btn.style.opacity = '0.7';
+  var data = {
+    name: name,
+    company: document.getElementById('cf-company').value,
+    phone: phone,
+    service: service,
+    location: document.getElementById('cf-location').value,
+    message: document.getElementById('cf-message').value,
+    _replyto: 'info@clearfloextracts.com',
+    _subject: 'New enquiry from clearfloextracts.com — ' + service
+  };
+  try {
+    var r = await fetch('https://formspree.io/f/mvzjznyb', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+      body: JSON.stringify(data)
+    });
+    if (r.ok) {
+      document.getElementById('cf-fields').style.display = 'none';
+      document.getElementById('cf-success').style.display = 'block';
+    } else {
+      btn.textContent = 'Send enquiry →';
+      btn.style.opacity = '1';
+      alert('Something went wrong. Please call us on 07511 411835.');
+    }
+  } catch(e) {
+    btn.textContent = 'Send enquiry →';
+    btn.style.opacity = '1';
+    alert('Something went wrong. Please call us on 07511 411835.');
+  }
+}
 </script>
 </body>
 </html>
