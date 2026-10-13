@@ -53,7 +53,7 @@ section{padding:80px 2rem}
 /* HERO */
 .hero{color:white;position:relative;overflow:hidden;min-height:680px;display:flex;flex-direction:column}
 .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center 30%;background-repeat:no-repeat}
-.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(110deg,rgba(20,28,16,0.88) 38%,rgba(20,28,16,0.5) 100%)}
+.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(110deg,rgba(20,28,16,0.92) 45%,rgba(20,28,16,0.75) 100%)}
 .hero-inner{position:relative;max-width:var(--max);margin:0 auto;padding:80px 2rem 70px;width:100%;display:grid;grid-template-columns:1fr 340px;gap:2rem;align-items:center}
 .hero-logo-wrap{margin-bottom:2rem}.hero-logo-right{display:flex;align-items:center;justify-content:center}
 .hero-logo-wrap img{height:90px;width:auto}.hero-logo-right img{width:280px;height:auto;filter:drop-shadow(0 8px 32px rgba(0,0,0,0.5))}
@@ -534,6 +534,13 @@ footer a:hover{color:var(--green-mid)}
   </div>
 </div>
 <script>
+function showTab(id, btn) {
+  document.querySelectorAll('.services-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  var panel = document.getElementById('tab-' + id);
+  if (panel) panel.classList.add('active');
+  if (btn) btn.classList.add('active');
+}
 async function submitCF() {
   var name = document.getElementById('cf-name').value;
   var phone = document.getElementById('cf-phone').value;
